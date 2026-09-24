@@ -46,7 +46,7 @@ EOF
             steps {
                 script {
                     docker.image(env.NODE_IMAGE).inside {
-                        sh 'npm ci'
+                        sh 'npm install'
                     }
                 }
             }
