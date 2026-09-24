@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.2",
-    "vite": "^7.1.7"
+    "vite": "^7.3.6"
   },
   "allowScripts": {
     "lucide-react@0.468.0": true,
