@@ -208,7 +208,7 @@ function Layout({ children }) {
       {!firebaseConfigured && (
         <div className="setup-banner">
           <b>Firebase isn't configured.</b> Add a <code>.env</code> file with your
-          <code>VITE_FIREBASE_*</code> keys and restart the dev server — nothing will save until then.
+          <code>WEB_FIREBASE_*</code> keys and restart the dev server — nothing will save until then.
         </div>
       )}
       {children}

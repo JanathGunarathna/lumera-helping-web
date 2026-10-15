@@ -21,12 +21,12 @@ if (missing.length) {
   console.error(
     `[firebase] Missing config values: ${missing.join(", ")}.\n` +
     `Create a ".env" file in the project root (next to package.json) with these keys:\n\n` +
-    `VITE_FIREBASE_API_KEY=...\n` +
-    `VITE_FIREBASE_AUTH_DOMAIN=...\n` +
-    `VITE_FIREBASE_PROJECT_ID=...\n` +
-    `VITE_FIREBASE_STORAGE_BUCKET=...\n` +
-    `VITE_FIREBASE_MESSAGING_SENDER_ID=...\n` +
-    `VITE_FIREBASE_APP_ID=...\n\n` +
+    `WEB_FIREBASE_API_KEY=...\n` +
+    `WEB_FIREBASE_AUTH_DOMAIN=...\n` +
+    `WEB_FIREBASE_PROJECT_ID=...\n` +
+    `WEB_FIREBASE_STORAGE_BUCKET=...\n` +
+    `WEB_FIREBASE_MESSAGING_SENDER_ID=...\n` +
+    `WEB_FIREBASE_APP_ID=...\n\n` +
     `Copy these from Firebase Console > Project settings > General > Your apps > SDK setup and configuration.\n` +
     `Then restart "npm run dev" — Vite only reads .env on startup.`
   );

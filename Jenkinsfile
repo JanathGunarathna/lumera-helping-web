@@ -21,21 +21,21 @@ pipeline {
         stage('Write Environment File') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'vite-firebase-api-key',             variable: 'VITE_FIREBASE_API_KEY'),
-                    string(credentialsId: 'vite-firebase-auth-domain',         variable: 'VITE_FIREBASE_AUTH_DOMAIN'),
-                    string(credentialsId: 'vite-firebase-project-id',          variable: 'VITE_FIREBASE_PROJECT_ID'),
-                    string(credentialsId: 'vite-firebase-storage-bucket',      variable: 'VITE_FIREBASE_STORAGE_BUCKET'),
-                    string(credentialsId: 'vite-firebase-messaging-sender-id', variable: 'VITE_FIREBASE_MESSAGING_SENDER_ID'),
-                    string(credentialsId: 'vite-firebase-app-id',              variable: 'VITE_FIREBASE_APP_ID')
+                    string(credentialsId: 'vite-firebase-api-key',             variable: 'WEB_FIREBASE_API_KEY'),
+                    string(credentialsId: 'vite-firebase-auth-domain',         variable: 'WEB_FIREBASE_AUTH_DOMAIN'),
+                    string(credentialsId: 'vite-firebase-project-id',          variable: 'WEB_FIREBASE_PROJECT_ID'),
+                    string(credentialsId: 'vite-firebase-storage-bucket',      variable: 'WEB_FIREBASE_STORAGE_BUCKET'),
+                    string(credentialsId: 'vite-firebase-messaging-sender-id', variable: 'WEB_FIREBASE_MESSAGING_SENDER_ID'),
+                    string(credentialsId: 'vite-firebase-app-id',              variable: 'WEB_FIREBASE_APP_ID')
                 ]) {
                     sh '''
                       cat > .env <<EOF
-VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET=$VITE_FIREBASE_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID=$VITE_FIREBASE_MESSAGING_SENDER_ID
-VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
+WEB_FIREBASE_API_KEY=$WEB_FIREBASE_API_KEY
+WEB_FIREBASE_AUTH_DOMAIN=$WEB_FIREBASE_AUTH_DOMAIN
+WEB_FIREBASE_PROJECT_ID=$WEB_FIREBASE_PROJECT_ID
+WEB_FIREBASE_STORAGE_BUCKET=$WEB_FIREBASE_STORAGE_BUCKET
+WEB_FIREBASE_MESSAGING_SENDER_ID=$WEB_FIREBASE_MESSAGING_SENDER_ID
+WEB_FIREBASE_APP_ID=$WEB_FIREBASE_APP_ID
 EOF
                     '''
                 }
