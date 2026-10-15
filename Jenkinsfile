@@ -18,18 +18,20 @@ pipeline {
             }
         }
 
-        stage('Write Environment File') {
-            steps {
-                withCredentials([
-                    string(credentialsId: 'vite-firebase-api-key',             variable: 'WEB_FIREBASE_API_KEY'),
-                    string(credentialsId: 'vite-firebase-auth-domain',         variable: 'WEB_FIREBASE_AUTH_DOMAIN'),
-                    string(credentialsId: 'vite-firebase-project-id',          variable: 'WEB_FIREBASE_PROJECT_ID'),
-                    string(credentialsId: 'vite-firebase-storage-bucket',      variable: 'WEB_FIREBASE_STORAGE_BUCKET'),
-                    string(credentialsId: 'vite-firebase-messaging-sender-id', variable: 'WEB_FIREBASE_MESSAGING_SENDER_ID'),
-                    string(credentialsId: 'vite-firebase-app-id',              variable: 'WEB_FIREBASE_APP_ID')
-                ]) {
-                    sh '''
-                      cat > .env <<EOF
+        
+stage('Write Environment File') {
+    steps {
+        withCredentials([
+            string(credentialsId: 'web-firebase-api-key', variable: 'WEB_FIREBASE_API_KEY'),
+            string(credentialsId: 'web-firebase-auth-domain', variable: 'WEB_FIREBASE_AUTH_DOMAIN'),
+            string(credentialsId: 'web-firebase-project-id', variable: 'WEB_FIREBASE_PROJECT_ID'),
+            string(credentialsId: 'web-firebase-storage-bucket', variable: 'WEB_FIREBASE_STORAGE_BUCKET'),
+            string(credentialsId: 'web-firebase-messaging-sender-id', variable: 'WEB_FIREBASE_MESSAGING_SENDER_ID'),
+            string(credentialsId: 'web-firebase-app-id', variable: 'WEB_FIREBASE_APP_ID')
+        ]) {
+            sh '''
+                umask 077
+                cat > .env <<EOF
 WEB_FIREBASE_API_KEY=$WEB_FIREBASE_API_KEY
 WEB_FIREBASE_AUTH_DOMAIN=$WEB_FIREBASE_AUTH_DOMAIN
 WEB_FIREBASE_PROJECT_ID=$WEB_FIREBASE_PROJECT_ID
@@ -37,10 +39,11 @@ WEB_FIREBASE_STORAGE_BUCKET=$WEB_FIREBASE_STORAGE_BUCKET
 WEB_FIREBASE_MESSAGING_SENDER_ID=$WEB_FIREBASE_MESSAGING_SENDER_ID
 WEB_FIREBASE_APP_ID=$WEB_FIREBASE_APP_ID
 EOF
-                    '''
-                }
-            }
+            '''
         }
+    }
+}
+
 
         stage('Install Dependencies') {
             steps {
