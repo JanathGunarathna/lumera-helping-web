@@ -17,7 +17,12 @@ pipeline {
                 checkout scm
             }
         }
-
+stage('Check Branch') {
+    steps {
+        echo "Branch: ${env.BRANCH_NAME}"
+        echo "Git branch: ${env.GIT_BRANCH}"
+    }
+}
         
 stage('Write Environment File') {
     steps {
