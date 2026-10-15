@@ -70,21 +70,31 @@ EOF
             }
         }
 
-        stage('Deploy to Firebase Hosting') {
-            when {
-                branch 'main'
-            }
-            steps {
-                withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
-                    script {
-                        docker.image(env.NODE_IMAGE).inside {
-                            sh 'npx firebase-tools deploy --only hosting --token "$FIREBASE_TOKEN" --non-interactive'
-                        }
-                    }
+
+stage('Deploy to Firebase Hosting') {
+    when {
+        expression {
+            env.BRANCH_NAME == 'main' ||
+            env.GIT_BRANCH == 'origin/main' ||
+            env.GIT_BRANCH == 'main'
+        }
+    }
+    steps {
+        withCredentials([
+            string(
+                credentialsId: 'firebase-token',
+                variable: 'FIREBASE_TOKEN'
+            )
+        ]) {
+            script {
+                docker.image(env.NODE_IMAGE).inside {
+                    sh 'npx firebase-tools deploy --only hosting --token "$FIREBASE_TOKEN" --non-interactive'
                 }
             }
         }
     }
+}
+
 
     post {
         success {
