@@ -7,7 +7,7 @@ import {
 import {
   collection, addDoc, getDocs, getDoc, deleteDoc, doc, setDoc, serverTimestamp
 } from "firebase/firestore";
-import { db, firebaseConfigured, checkFirestoreConnection } from "./firebase";
+import { firebaseConfigured, checkFirestoreConnection, requireFirestore } from "./firebase";
 import {
   Beaker, ChevronRight, CirclePlus, Database, FlaskConical,
   Home, PackagePlus, Trash2, X, Save, Check, Clock, ArrowRight,
@@ -66,7 +66,13 @@ function AppDataProvider({ children }) {
 
   const loadAll = useCallback(async () => {
     setLoading(true);
+    if (!firebaseConfigured) {
+      setConnection("error");
+      setLoading(false);
+      return;
+    }
     try {
+      const db = requireFirestore();
       const oilSnap = await getDocs(collection(db, "fragranceOils"));
       if (!oilSnap.empty) setOils(oilSnap.docs.map(d => ({ id: d.id, ...d.data() })));
 
@@ -121,6 +127,7 @@ function AppDataProvider({ children }) {
       updatedAt: serverTimestamp()
     };
 
+    const db = requireFirestore();
     let savedId = test.id;
     if (test.id.startsWith("draft-")) {
       const ref = await addDoc(collection(db, "fragranceTests"), { ...payload, createdAt: serverTimestamp() });
@@ -145,11 +152,13 @@ function AppDataProvider({ children }) {
   }
 
   async function deleteSample(id) {
+    const db = requireFirestore();
     await deleteDoc(doc(db, "fragranceTests", id));
     setSamples(v => v.filter(s => s.id !== id));
   }
 
   async function addOil(name, category, costPerMl = 0) {
+    const db = requireFirestore();
     const item = { name: name.trim(), category, costPerMl: Number(costPerMl) || 0, createdAt: serverTimestamp() };
     const ref = await addDoc(collection(db, "fragranceOils"), item);
     const verify = await getDoc(doc(db, "fragranceOils", ref.id));
@@ -160,6 +169,7 @@ function AppDataProvider({ children }) {
   }
 
   async function deleteOil(id) {
+    const db = requireFirestore();
     await deleteDoc(doc(db, "fragranceOils", id));
     setOils(v => v.filter(o => o.id !== id));
   }

@@ -10,17 +10,15 @@ const firebaseConfig = {
   appId: import.meta.env.WEB_FIREBASE_APP_ID,
 };
 
-// If any of these are missing, Firebase silently "initializes" with a broken
-// config and every Firestore read/write fails without a clear reason why.
-// Fail loudly instead, so it's obvious this is a missing .env file, not a bug.
+// Do not initialize Firebase with an incomplete config; show setup guidance instead.
 const missing = Object.entries(firebaseConfig)
-  .filter(([, value]) => !value)
+  .filter(([, value]) => !value?.trim())
   .map(([key]) => key);
 
 if (missing.length) {
   console.error(
     `[firebase] Missing config values: ${missing.join(", ")}.\n` +
-    `Create a ".env" file in the project root (next to package.json) with these keys:\n\n` +
+    `Copy ".env.example" to ".env" in the project root (next to package.json), then add these values:\n\n` +
     `WEB_FIREBASE_API_KEY=...\n` +
     `WEB_FIREBASE_AUTH_DOMAIN=...\n` +
     `WEB_FIREBASE_PROJECT_ID=...\n` +
@@ -32,9 +30,20 @@ if (missing.length) {
   );
 }
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-export const db = getFirestore(app);
 export const firebaseConfigured = missing.length === 0;
+const app = firebaseConfigured
+  ? (getApps()[0] ?? initializeApp(firebaseConfig))
+  : null;
+export const db = app ? getFirestore(app) : null;
+
+export function requireFirestore() {
+  if (!db) {
+    throw new Error(
+      "Firebase is not configured. Add the WEB_FIREBASE_* values to .env and restart the app."
+    );
+  }
+  return db;
+}
 
 // Writes a throwaway doc and reads it straight back. This is the only way to
 // know a save has truly reached Firestore — a write can "succeed" locally
@@ -42,7 +51,7 @@ export const firebaseConfigured = missing.length === 0;
 // server, e.g. if an ad blocker/privacy extension is quietly blocking
 // requests to firestore.googleapis.com, or the security rules reject it.
 export async function checkFirestoreConnection() {
-  if (!firebaseConfigured) return false;
+  if (!db) return false;
   try {
     const ref = doc(db, "_healthcheck", "ping");
     await setDoc(ref, { ts: Date.now() });
